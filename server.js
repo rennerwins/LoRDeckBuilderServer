@@ -1,10 +1,25 @@
-const express = require("express");
-const app = express();
+const express = require('express')
+const app = express()
+const set1 = require('./assets/set1-en_us.json')
+const set2 = require('./assets/set2-en_us.json')
 
-const PORT = process.env.PORT || 4000;
+const VERSION = '1_4_0'
+const data = [...set1, ...set2].map((card) => {
+	return {
+		...card,
+		assets: [
+			{
+				gameAbsolutePath: `http://dd.b.pvp.net/${VERSION}/set1/en_us/img/cards/${card.cardCode}.png`,
+				fullAbsolutePath: `http://dd.b.pvp.net/${VERSION}/set1/en_us/img/cards/${card.cardCode}-full.png`,
+			},
+		],
+	}
+})
 
-app.get("/", (req, res) => {
-  res.json("hello world");
-});
+const PORT = process.env.PORT || 4000
 
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+app.get('/cards', (req, res) => {
+	res.json(data)
+})
+
+app.listen(PORT, () => console.log(`listening on port ${PORT}`))
